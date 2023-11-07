@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import LoadingDots from "@/components/loading-dots";
 import toast from "react-hot-toast";
@@ -11,50 +11,70 @@ export default function Form({ type }: { type: "login" | "register" }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const formSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log(e.currentTarget)
+    if (type === "login") {
+
+      // fetch("/api/auth/multipass", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email: e.currentTarget.email.value,
+      //     password: e.currentTarget.password.value,
+      //   }),
+      // }).then(async (res) => {
+      //   setLoading(false);
+      // }).catch(error => { console.log(error) })
+
+      signIn("credentials", {
+        redirect: false,
+        email: e.currentTarget.email.value,
+        password: e.currentTarget.password.value,
+        // @ts-ignore
+      }).then(({ error }) => {
+        console.log(error)
+        if (error) {
+          setLoading(false);
+          toast.error(error);
+        } else {
+          router.refresh();
+          router.push("/protected");
+        }
+      });
+    } else {
+      fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: e.currentTarget.email.value,
+          password: e.currentTarget.password.value,
+        }),
+      }).then(async (res) => {
+        setLoading(false);
+        if (res.status === 200) {
+          toast.success("Account created! Redirecting to login...");
+          setTimeout(() => {
+            router.push("/");
+          }, 2000);
+        } else {
+          const { error } = await res.json();
+          toast.error(error);
+        }
+      });
+    }
+  }
+
+  const shopifyMultiPass = async () => {}
+
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setLoading(true);
-        if (type === "login") {
-          signIn("credentials", {
-            redirect: false,
-            email: e.currentTarget.email.value,
-            password: e.currentTarget.password.value,
-            // @ts-ignore
-          }).then(({ error }) => {
-            if (error) {
-              setLoading(false);
-              toast.error(error);
-            } else {
-              router.refresh();
-              router.push("/protected");
-            }
-          });
-        } else {
-          fetch("/api/auth/register", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: e.currentTarget.email.value,
-              password: e.currentTarget.password.value,
-            }),
-          }).then(async (res) => {
-            setLoading(false);
-            if (res.status === 200) {
-              toast.success("Account created! Redirecting to login...");
-              setTimeout(() => {
-                router.push("/login");
-              }, 2000);
-            } else {
-              const { error } = await res.json();
-              toast.error(error);
-            }
-          });
-        }
-      }}
+      onSubmit={formSubmitHandler}
       className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
     >
       <div>

@@ -1,16 +1,56 @@
 import SignOut from "@/components/sign-out";
+import { getServerSession } from "next-auth/next";
+import type { GetServerSideProps } from "next";
+import { headers } from "next/headers";
+import Link from "next/link";
+import Image from "next/image";
 
-export default function Home() {
+async function getData(host: string) {
+  const session = await getServerSession();
+
+  const res = await fetch(`http://${host}/api/auth/multipass`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: session && session.user?.email,
+    }),
+  })
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+ 
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+ 
+  return res.json()
+}
+
+export default async function Home() {
+  const host = headers().get("host");
+  console.log(host)
+  const data = await getData(host!)
+  
   return (
-    <div className="flex h-screen bg-black">
-      <div className="w-screen h-screen flex flex-col space-y-5 justify-center items-center">
-        <iframe
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="w-full max-w-screen-lg aspect-video"
-        ></iframe>
+    <div className="flex h-screen">
+      <div className="w-screen h-screen flex flex-col space-y-12 justify-center items-center">
+        <Link
+          className="inline-flex items-center p-4 border-2"
+          href={data.multipass_link}
+        >
+          <Image
+            src="/shopify-logo.png"
+            priority
+            alt="Logo"
+            className="w-12 h-12 mr-4"
+            width={50}
+            height={50}
+          />
+
+          <span className="w-full">Login to Shopify</span>
+        </Link>
         <SignOut />
       </div>
     </div>

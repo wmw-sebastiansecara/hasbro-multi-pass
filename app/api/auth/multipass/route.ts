@@ -20,6 +20,6 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ 
     email: 'sebastian@wemakewebsites.com',
-    multipass_link: 'google.com',
+    multipass_link: 'google.com'
    });
 }

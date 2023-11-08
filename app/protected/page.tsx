@@ -5,40 +5,40 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 
-async function getData(host: string) {
-  const session = await getServerSession();
+// async function getData(host: string) {
+//   const session = await getServerSession();
 
-  const res = await fetch(`http://${host}/api/auth/multipass`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: session && session.user?.email,
-    }),
-  })
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
+//   const res = await fetch(`http://${host}/api/auth/multipass`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       email: session && session.user?.email,
+//     }),
+//   })
+//   // The return value is *not* serialized
+//   // You can return Date, Map, Set, etc.
  
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data')
-  }
+//   if (!res.ok) {
+//     // This will activate the closest `error.js` Error Boundary
+//     throw new Error('Failed to fetch data')
+//   }
  
-  return res.json()
-}
+//   return res.json()
+// }
 
 export default async function Home() {
-  const host = headers().get("host");
-  console.log(host)
-  const data = await getData(host!)
+  // const host = headers().get("host");
+  // console.log(host)
+  // const data = await getData(host!)
   
   return (
     <div className="flex h-screen">
       <div className="w-screen h-screen flex flex-col space-y-12 justify-center items-center">
         <Link
           className="inline-flex items-center p-4 border-2"
-          href={data.multipass_link}
+          href="google.com"
         >
           <Image
             src="/shopify-logo.png"

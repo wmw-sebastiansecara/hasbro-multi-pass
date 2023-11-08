@@ -14,7 +14,6 @@ export default function Form({ type }: { type: "login" | "register" }) {
   const formSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    console.log(e.currentTarget)
     if (type === "login") {
 
       // fetch("/api/auth/multipass", {

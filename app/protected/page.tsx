@@ -8,17 +8,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 async function getData(host: string, session: object) {
-
-  // const res = await fetch(`http://${host}/api/auth/multipass`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     email: session?.user?.email,
-  //   }),
-  // })
-
   const res = await axios.post(`http://${host}/api/auth/multipass`, {
     email: session?.user?.email,
   },{
@@ -26,18 +15,6 @@ async function getData(host: string, session: object) {
       'Content-Type': 'application/json'
     }
   })
-  
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
- 
-  // if (!res.ok) {
-  //   // This will activate the closest `error.js` Error Boundary
-  //   throw new Error('Failed to fetch data')
-  // }
-
-  // const data = await res.json()
-
-  // console.log(data)
 
   return res.data;
 }
@@ -54,11 +31,8 @@ export default async function Home() {
       <div className="w-screen h-screen flex flex-col space-y-12 justify-center items-center">
         <Link
           className="inline-flex items-center p-4 border-2"
-          href="google.com"
+          href={data.multipass_link}
         >
-          {session?.user?.email}
-          <br/>
-          {host}
           <Image
             src="/shopify-logo.png"
             priority

@@ -29,16 +29,15 @@ async function getData(host: string, session: object) {
 
   const data = await res.json()
 
-  return data;
+  console.log(data)
+
+  return JSON.stringify(data);
 }
 
 export default async function Home() {
   const host = headers().get("host");
   const session = await unstable_getServerSession();
   const data = await getData(host!, session!)
-  
-  console.log(data)
-
   
   return (
     <div className="flex h-screen">

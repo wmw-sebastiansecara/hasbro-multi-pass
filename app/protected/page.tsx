@@ -2,42 +2,52 @@ import SignOut from "@/components/sign-out";
 import { unstable_getServerSession } from "next-auth/next";
 import type { GetServerSideProps } from "next";
 import { NextRequest, NextResponse } from "next/server";
-
+import axios from 'axios';
 import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 
 async function getData(host: string, session: object) {
 
-  const res = await fetch(`http://${host}/api/auth/multipass`, {
-    method: "POST",
+  // const res = await fetch(`http://${host}/api/auth/multipass`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     email: session?.user?.email,
+  //   }),
+  // })
+
+  const res = await axios.post(`http://${host}/api/auth/multipass`, {
+    email: session?.user?.email,
+  },{
     headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: session?.user?.email,
-    }),
+      'Content-Type': 'application/json'
+    }
   })
   
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
  
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data')
-  }
+  // if (!res.ok) {
+  //   // This will activate the closest `error.js` Error Boundary
+  //   throw new Error('Failed to fetch data')
+  // }
 
-  const data = await res.json()
+  // const data = await res.json()
 
-  console.log(data)
+  // console.log(data)
 
-  return JSON.stringify(data);
+  return res.data;
 }
 
 export default async function Home() {
   const host = headers().get("host");
   const session = await unstable_getServerSession();
   const data = await getData(host!, session!)
+
+  console.log(data)
   
   return (
     <div className="flex h-screen">

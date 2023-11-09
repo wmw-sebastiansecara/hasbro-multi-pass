@@ -31,7 +31,7 @@ async function getData(host: string) {
 }
 
 export default async function Home() {
-  // const host = headers().get("host");
+  const host = headers().get("host");
   const session = await unstable_getServerSession();
   // const data = await getData(host!)
   
@@ -45,6 +45,9 @@ export default async function Home() {
           href="google.com"
         >
           {session?.user?.email}
+          <br/>
+          {host}
+
           <Image
             src="/shopify-logo.png"
             priority

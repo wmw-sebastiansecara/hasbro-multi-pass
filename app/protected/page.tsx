@@ -1,6 +1,8 @@
 import SignOut from "@/components/sign-out";
 import { unstable_getServerSession } from "next-auth/next";
 import type { GetServerSideProps } from "next";
+import { NextRequest, NextResponse } from "next/server";
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
@@ -24,8 +26,10 @@ async function getData(host: string, session: object) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')
   }
- 
-  return res
+
+  const data = await res.json()
+
+  return data;
 }
 
 export default async function Home() {
@@ -33,6 +37,7 @@ export default async function Home() {
   const session = await unstable_getServerSession();
   const data = await getData(host!, session!)
   
+  console.log(data)
 
   
   return (
@@ -45,7 +50,6 @@ export default async function Home() {
           {session?.user?.email}
           <br/>
           {host}
-          {data.multipass_link}
           <Image
             src="/shopify-logo.png"
             priority

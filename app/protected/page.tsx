@@ -5,10 +5,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 
-async function getData(host: string) {
-  const session = await unstable_getServerSession();
-
-  console.log(`http://${host}/api/auth/multipass`)
+async function getData(host: string, session: object) {
 
   const res = await fetch(`http://${host}/api/auth/multipass`, {
     method: "POST",
@@ -16,7 +13,7 @@ async function getData(host: string) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email: session && session.user?.email,
+      email: session?.user?.email,
     }),
   })
   // The return value is *not* serialized
@@ -33,7 +30,7 @@ async function getData(host: string) {
 export default async function Home() {
   const host = headers().get("host");
   const session = await unstable_getServerSession();
-  // const data = await getData(host!)
+  const data = await getData(host!, session!)
   
 
   
@@ -47,7 +44,7 @@ export default async function Home() {
           {session?.user?.email}
           <br/>
           {host}
-
+          {data.multipass_link}
           <Image
             src="/shopify-logo.png"
             priority

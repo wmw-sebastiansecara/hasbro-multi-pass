@@ -29,8 +29,8 @@ import Image from "next/image";
 // }
 
 export default async function Home() {
-  // const host = headers().get("host");
-  // console.log(host)
+  const host = headers().get("host");
+  console.log(host)
   // const data = await getData(host!)
   
   return (

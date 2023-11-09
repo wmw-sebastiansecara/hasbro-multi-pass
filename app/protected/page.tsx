@@ -1,37 +1,39 @@
 import SignOut from "@/components/sign-out";
-import { getServerSession } from "next-auth/next";
+import { unstable_getServerSession } from "next-auth/next";
 import type { GetServerSideProps } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 
-// async function getData(host: string) {
-//   const session = await getServerSession();
+async function getData(host: string) {
+  const session = await unstable_getServerSession();
 
-//   const res = await fetch(`http://${host}/api/auth/multipass`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       email: session && session.user?.email,
-//     }),
-//   })
-//   // The return value is *not* serialized
-//   // You can return Date, Map, Set, etc.
+  const res = await fetch(`http://${host}/api/auth/multipass`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: session && session.user?.email,
+    }),
+  })
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
  
-//   if (!res.ok) {
-//     // This will activate the closest `error.js` Error Boundary
-//     throw new Error('Failed to fetch data')
-//   }
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
  
-//   return res.json()
-// }
+  return res.json()
+}
 
 export default async function Home() {
   const host = headers().get("host");
   console.log(host)
-  // const data = await getData(host!)
+  const data = await getData(host!)
+
+  console.log(data)
   
   return (
     <div className="flex h-screen">

@@ -16,6 +16,6 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ 
     email,
-    multipass_link: multipassLink,
+    multipass_link: multipassLink
    });
 }

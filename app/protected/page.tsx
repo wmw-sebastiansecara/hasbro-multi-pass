@@ -16,6 +16,7 @@ async function getData(host: string, session: object) {
       email: session?.user?.email,
     }),
   })
+  
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
  
@@ -24,7 +25,7 @@ async function getData(host: string, session: object) {
     throw new Error('Failed to fetch data')
   }
  
-  return res.json()
+  return res
 }
 
 export default async function Home() {

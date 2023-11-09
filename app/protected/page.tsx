@@ -8,6 +8,8 @@ import Image from "next/image";
 async function getData(host: string) {
   const session = await unstable_getServerSession();
 
+  console.log(`http://${host}/api/auth/multipass`)
+
   const res = await fetch(`http://${host}/api/auth/multipass`, {
     method: "POST",
     headers: {
@@ -29,11 +31,11 @@ async function getData(host: string) {
 }
 
 export default async function Home() {
-  const host = headers().get("host");
-  console.log(host)
-  const data = await getData(host!)
+  // const host = headers().get("host");
+  const session = await unstable_getServerSession();
+  // const data = await getData(host!)
+  
 
-  console.log(data)
   
   return (
     <div className="flex h-screen">
@@ -42,6 +44,7 @@ export default async function Home() {
           className="inline-flex items-center p-4 border-2"
           href="google.com"
         >
+          {session?.user?.email}
           <Image
             src="/shopify-logo.png"
             priority
